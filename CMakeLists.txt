@@ -50,3 +50,9 @@ target_link_libraries(arex_app PRIVATE arex::core)
 target_apply_warnings(arex_app)
 target_enable_sanitizers(arex_app)
 
+# Testing
+option(BUILD_TESTING "Build unit test suite" ON)
+if(BUILD_TESTING)
+    enable_testing()
+    add_subdirectory(tests)
+endif()

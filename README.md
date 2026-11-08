@@ -6,60 +6,27 @@ Written in C++20 with high performance techniques to make the tool very crisp an
 
 No external 3rd party lib dependencies. Tested on Debian.
 
-## TODO:
+## Installing on Linux
 
-Test on Mac and Windows
+Clone the repo and run `install.sh` script. It will do the full build and drop the executable in your `/usr/local/bin` dir. 
 
 ## Quick Preview
 
 Navigate the dir tree in the terminal with arrow keys, awsd or vim keys
 
-```
- [arex] /home/mishar/buildingcpp/concurrency/src
-┌─ Preview ──────────────────────────────────────────
-│ add_subdirectory(library)
-│ add_subdirectory(executable)
-│ add_subdirectory(test)
-│
-│
-│
-│
-│
-└────────────────────────────────────────────────────
-   [DIR]    executable/
-   [DIR]    library/
-   [DIR]    test/
- > [FILE]   CMakeLists.txt
-   [ACTION] [Actions...]
-```
+![Directory browsing preview](media/screenshot-1.jpg)
+![Directory navigation preview](media/screenshot-2.jpg)
 
 Run core basic commands instantly.
 
-```
- [arex] /home/mishar/buildingcpp/concurrency/src
-┌─ Preview ──────────────────────────────────────────
-│ add_subdirectory(library)
-│ add_subdirectory(executable)
-│ add_subdirectory(test)
-│
-│
-│
-│
-│
-└────────────────────────────────────────────────────
- > [ACTION] Copy Relative Path
-   [ACTION] Copy Full Path
-   [ACTION] default (xdg-open)
-   [ACTION] cat
-   [ACTION] more
-   [ACTION] less
-   [ACTION] cut
-   [ACTION] copy
- -- [File Actions] Target: CMakeLists.txt (Esc to cancel)
-```
+![File actions preview](media/screenshot-3.jpg)
 
 ## Subtle nod to my favorite car
 
 The mighty Mazda RX3
 
 https://en.wikipedia.org/wiki/Mazda_Grand_Familia#/media/File:Mazda-Savanna.JPG
+
+## TODO:
+
+Test on Mac and Windows
