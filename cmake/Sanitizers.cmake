@@ -1,0 +1,6 @@
+function(target_enable_sanitizers TARGET_NAME)
+    if(NOT MSVC AND CMAKE_BUILD_TYPE STREQUAL "Debug")
+        target_compile_options(${TARGET_NAME} PRIVATE -fsanitize=address,undefined -fno-omit-frame-pointer)
+        target_link_options(${TARGET_NAME} PRIVATE -fsanitize=address,undefined)
+    endif()
+endfunction()
