@@ -30,6 +30,11 @@ struct RenderState {
     std::size_t preview_height{8};
 };
 
+struct TerminalSize {
+    std::size_t rows{24};
+    std::size_t cols{80};
+};
+
 class TerminalCanvas {
 public:
     explicit TerminalCanvas(std::size_t initial_buffer_capacity = 8192);
@@ -43,6 +48,11 @@ public:
 
     void enter_alternate_screen();
     void leave_alternate_screen();
+
+    /// Queries OS for current terminal dimensions via ioctl.
+    [[nodiscard]] static TerminalSize get_terminal_size();
+
+    /// Renders state with automatic menu scrolling bounded to current terminal height.
     void render(const RenderState& state);
 
 private:
