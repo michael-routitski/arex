@@ -1,0 +1,6 @@
+#ifndef AREX_ACTIONS_ACTION_CONTEXT_HPP
+#define AREX_ACTIONS_ACTION_CONTEXT_HPP
+
+#include <arex/action.hpp>
+
+#endif // AREX_ACTIONS_ACTION_CONTEXT_HPP

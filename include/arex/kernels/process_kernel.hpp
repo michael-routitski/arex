@@ -1,11 +1,11 @@
-#ifndef AREX_PROCESS_RUNNER_HPP
-#define AREX_PROCESS_RUNNER_HPP
+#ifndef AREX_KERNELS_PROCESS_KERNEL_HPP
+#define AREX_KERNELS_PROCESS_KERNEL_HPP
 
 #include <filesystem>
 #include <string>
 #include <vector>
 
-namespace arex {
+namespace arex::kernels {
 
 struct CommandConfig {
     std::string name;
@@ -14,16 +14,16 @@ struct CommandConfig {
     bool redirect_output_to_null{true};
 };
 
-class ProcessRunner {
+class ProcessKernel {
 public:
-    ProcessRunner() = default;
-    ~ProcessRunner() = default;
+    ProcessKernel() = default;
+    ~ProcessKernel() = default;
 
-    ProcessRunner(const ProcessRunner&) = delete;
-    ProcessRunner& operator=(const ProcessRunner&) = delete;
+    ProcessKernel(const ProcessKernel&) = delete;
+    ProcessKernel& operator=(const ProcessKernel&) = delete;
 
-    ProcessRunner(ProcessRunner&&) noexcept = default;
-    ProcessRunner& operator=(ProcessRunner&&) noexcept = default;
+    ProcessKernel(ProcessKernel&&) noexcept = default;
+    ProcessKernel& operator=(ProcessKernel&&) noexcept = default;
 
     /// Spawns a background command asynchronously without blocking the TUI event loop.
     [[nodiscard]] static bool execute_detached(
@@ -39,6 +39,6 @@ public:
     );
 };
 
-} // namespace arex
+} // namespace arex::kernels
 
-#endif // AREX_PROCESS_RUNNER_HPP
+#endif // AREX_KERNELS_PROCESS_KERNEL_HPP

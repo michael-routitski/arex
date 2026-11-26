@@ -26,7 +26,7 @@ inline bool detect_binary(const char* data, std::size_t len) {
 } // namespace
 
 FilePreviewer::FilePreviewer(std::size_t max_lines, std::size_t max_bytes)
-    : m_max_lines(max_lines), m_max_bytes(max_bytes) {}
+    : _max_lines(max_lines), _max_bytes(max_bytes) {}
 
 bool FilePreviewer::preview_file(
     const std::filesystem::path& path,
@@ -36,6 +36,7 @@ bool FilePreviewer::preview_file(
     out_result.lines.clear();
     out_result.is_binary = false;
     out_result.is_empty = false;
+    out_result.has_overflow = false;
     out_result.bytes_read = 0;
 
 #if defined(_WIN32)
@@ -55,9 +56,15 @@ bool FilePreviewer::preview_file(
         return false;
     }
 
-    out_buffer.resize(m_max_bytes);
+    out_buffer.resize(_max_bytes);
     DWORD bytesRead = 0;
-    const BOOL success = ReadFile(hFile, out_buffer.data(), static_cast<DWORD>(m_max_bytes), &bytesRead, NULL);
+    const BOOL success = ReadFile(
+        hFile,
+        out_buffer.data(),
+        static_cast<DWORD>(_max_bytes),
+        &bytesRead,
+        NULL
+    );
     CloseHandle(hFile);
 
     if (!success || bytesRead == 0) {
@@ -82,7 +89,7 @@ bool FilePreviewer::preview_file(
     }
 
     const std::size_t file_size = static_cast<std::size_t>(st.st_size);
-    const std::size_t map_size = std::min(file_size, m_max_bytes);
+    const std::size_t map_size = std::min(file_size, _max_bytes);
 
     void* map_ptr = ::mmap(nullptr, map_size, PROT_READ, MAP_PRIVATE, fd, 0);
     ::close(fd); // close asap
@@ -94,7 +101,7 @@ bool FilePreviewer::preview_file(
     const char* mapped_data = static_cast<const char*>(map_ptr);
 #endif
 
-    out_result.bytes_read = std::min(file_size, m_max_bytes);
+    out_result.bytes_read = std::min(file_size, _max_bytes);
 
     // 1. Instant Binary Detection
     if (detect_binary(mapped_data, out_result.bytes_read)) {
@@ -118,7 +125,7 @@ bool FilePreviewer::preview_file(
     const char* current = data_ptr;
     const char* end = data_ptr + out_result.bytes_read;
 
-    while (current < end && out_result.lines.size() < m_max_lines) {
+    while (current < end && out_result.lines.size() < _max_lines) {
         const std::size_t remaining = static_cast<std::size_t>(end - current);
         const void* next_newline = std::memchr(current, '\n', remaining);
 
@@ -142,6 +149,10 @@ bool FilePreviewer::preview_file(
             out_result.lines.emplace_back(current, line_len);
             break;
         }
+    }
+
+    if (current < end) {
+        out_result.has_overflow = true;
     }
 
     return true;

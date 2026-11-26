@@ -1,4 +1,4 @@
-#include <arex/process_runner.hpp>
+#include <arex/kernels/process_kernel.hpp>
 
 #include <cstdlib>
 #include <vector>
@@ -12,9 +12,9 @@
     #include <unistd.h>
 #endif
 
-namespace arex {
+namespace arex::kernels {
 
-bool ProcessRunner::execute_detached(
+bool ProcessKernel::execute_detached(
     const CommandConfig& config,
     const std::filesystem::path& target_path
 ) {
@@ -123,7 +123,7 @@ bool ProcessRunner::execute_detached(
 #endif
 }
 
-bool ProcessRunner::execute_foreground(
+bool ProcessKernel::execute_foreground(
     const CommandConfig& config,
     const std::filesystem::path& target_path
 ) {
@@ -189,7 +189,6 @@ bool ProcessRunner::execute_foreground(
     }
 
     if (pid == 0) {
-        // Child inherits stdout/stdin/stderr directly from parent terminal
         ::execvp(argv_ptrs[0], argv_ptrs.data());
         ::_exit(127);
     }
@@ -200,4 +199,4 @@ bool ProcessRunner::execute_foreground(
 #endif
 }
 
-} // namespace arex
+} // namespace arex::kernels

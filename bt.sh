@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+# -------------------------------------------------
+# bt = "Build and Test"
+# -------------------------------------------------
+
 PURGE=false
 RECONFIG=false
 

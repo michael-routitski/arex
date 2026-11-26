@@ -12,6 +12,7 @@ struct PreviewResult {
     std::vector<std::string_view> lines;
     bool is_binary{false};
     bool is_empty{false};
+    bool has_overflow{false};
     std::size_t bytes_read{0};
 };
 
@@ -34,8 +35,8 @@ public:
     );
 
 private:
-    std::size_t m_max_lines{16};
-    std::size_t m_max_bytes{16384};
+    std::size_t _max_lines{16};
+    std::size_t _max_bytes{16384};
 };
 
 } // namespace arex

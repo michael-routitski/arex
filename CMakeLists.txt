@@ -22,10 +22,14 @@ include(Sanitizers)
 # Core Library Target
 add_library(arex_core STATIC
     src/terminal_canvas.cpp
+    src/kernels/terminal_kernel.cpp
     src/file_previewer.cpp
-    src/process_runner.cpp
-    src/key_listener.cpp
+    src/kernels/process_kernel.cpp
+    src/kernels/keyboard_kernel.cpp
     src/directory_scanner.cpp
+    src/menu_navigator.cpp
+    src/menu_actions.cpp
+    src/menu_app.cpp
 )
 
 add_library(arex::core ALIAS arex_core)

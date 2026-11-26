@@ -1,5 +1,7 @@
-#include <arex/process_runner.hpp>
+#include <arex/kernels/process_kernel.hpp>
+
 #include <cassert>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 
@@ -10,7 +12,7 @@ int main() {
         out << "hello";
     }
 
-    arex::CommandConfig config{
+    arex::kernels::CommandConfig config{
         .name = "Touch File",
 #if defined(_WIN32)
         .command = "cmd.exe",
@@ -21,10 +23,11 @@ int main() {
 #endif
     };
 
-    const bool success = arex::ProcessRunner::execute_detached(config, dummy_file);
+    const bool success =
+        arex::kernels::ProcessKernel::execute_detached(config, dummy_file);
     std::filesystem::remove(dummy_file);
 
-    assert(success && "ProcessRunner execution failed");
-    std::cout << "[Test Passed] test_process_runner\n";
+    assert(success && "ProcessKernel execution failed");
+    std::cout << "[Test Passed] test_process_kernel\n";
     return 0;
 }

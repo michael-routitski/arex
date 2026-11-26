@@ -1,4 +1,4 @@
-#include <arex/key_listener.hpp>
+#include <arex/kernels/keyboard_kernel.hpp>
 
 #include <array>
 #include <cerrno>
@@ -7,53 +7,46 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-namespace arex {
+namespace arex::kernels {
 
-KeyListener::KeyListener() {
+KeyboardKernel::KeyboardKernel() {
     enable_raw_mode();
 }
 
-KeyListener::~KeyListener() {
+KeyboardKernel::~KeyboardKernel() {
     disable_raw_mode();
 }
 
-void KeyListener::enable_raw_mode() {
-    if (m_raw_mode_enabled) return;
+void KeyboardKernel::enable_raw_mode() {
+    if (_raw_mode_enabled) return;
 
-    if (tcgetattr(STDIN_FILENO, &m_original_termios) == -1) {
+    if (tcgetattr(STDIN_FILENO, &_original_termios) == -1) {
         return;
     }
 
-    struct termios raw = m_original_termios;
+    struct termios raw = _original_termios;
 
-    // Input flags
     raw.c_iflag &= static_cast<tcflag_t>(~(BRKINT | ICRNL | INPCK | ISTRIP | IXON));
-
-    // Keep ONLCR so \n expands to \r\n automatically, or handle output cleanly
     raw.c_oflag |= static_cast<tcflag_t>(ONLCR);
-
-    // Control flags
     raw.c_cflag |= static_cast<tcflag_t>(CS8);
-
-    // Local flags: disable ECHO, ICANON, IEXTEN, ISIG
     raw.c_lflag &= static_cast<tcflag_t>(~(ECHO | ICANON | IEXTEN | ISIG));
 
     raw.c_cc[VMIN]  = 0;
     raw.c_cc[VTIME] = 0;
 
     if (tcsetattr(STDIN_FILENO, TCSAFLUSH, &raw) == 0) {
-        m_raw_mode_enabled = true;
+        _raw_mode_enabled = true;
     }
 }
 
-void KeyListener::disable_raw_mode() {
-    if (m_raw_mode_enabled) {
-        tcsetattr(STDIN_FILENO, TCSAFLUSH, &m_original_termios);
-        m_raw_mode_enabled = false;
+void KeyboardKernel::disable_raw_mode() {
+    if (_raw_mode_enabled) {
+        tcsetattr(STDIN_FILENO, TCSAFLUSH, &_original_termios);
+        _raw_mode_enabled = false;
     }
 }
 
-KeyCode KeyListener::read_key_nonblocking() {
+KeyCode KeyboardKernel::read_key_nonblocking() {
     char ch = 0;
     auto bytes_read = ::read(STDIN_FILENO, &ch, 1);
 
@@ -80,10 +73,8 @@ KeyCode KeyListener::read_key_nonblocking() {
         default: break;
     }
 
-    // ANSI Escape Sequences (\x1b[A, \x1b[B, etc.)
     if (ch == '\x1b') {
         char seq[2];
-        // Give the terminal a 1ms window to yield the rest of the escape sequence
         ::usleep(1000);
 
         if (::read(STDIN_FILENO, &seq[0], 1) <= 0) return KeyCode::Escape;
@@ -106,7 +97,7 @@ KeyCode KeyListener::read_key_nonblocking() {
     return KeyCode::Unknown;
 }
 
-KeyCode KeyListener::read_key_blocking() {
+KeyCode KeyboardKernel::read_key_blocking() {
     while (true) {
         if (const auto key = read_key_nonblocking(); key != KeyCode::None) {
             return key;
@@ -115,4 +106,4 @@ KeyCode KeyListener::read_key_blocking() {
     }
 }
 
-} // namespace arex
+} // namespace arex::kernels

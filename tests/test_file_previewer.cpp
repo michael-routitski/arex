@@ -22,6 +22,7 @@ int main() {
     assert(success && "File preview failed");
     assert(!result.is_binary && "File should not be detected as binary");
     assert(result.lines.size() == 5 && "Should preview exactly 5 lines");
+    assert(result.has_overflow && "File preview should report remaining lines");
 
     std::cout << "[Previewer Test] Previewed " << result.lines.size() << " lines:\n";
     for (const auto line : result.lines) {

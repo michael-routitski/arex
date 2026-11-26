@@ -1,7 +1,11 @@
 set(TEST_FILES
     test_file_previewer.cpp
     test_directory_scanner.cpp
-    test_process_runner.cpp
+    test_process_kernel.cpp
+    test_terminal_canvas.cpp
+    test_terminal_kernel.cpp
+    test_menu_navigator.cpp
+    test_menu_actions.cpp
 )
 
 foreach(TEST_SRC ${TEST_FILES})
